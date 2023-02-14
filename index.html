@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Weather App</title>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"> -->
+</head>
+<body>
+    <h1 class="text-center">Weather Forecast App</h1>
+
+    <div id="result1" class="temperature">
+            
+    </div>
+    <div class="col-4">
+        <div>
+            
+        </div>
+    </div>
+    <div class="col-4 details">
+        <div class="container">
+            <form action="">
+                <input class="search" id="cityInput" type="text" placeholder="Enter Your City">
+                <button class="btn" onclick="search()" type="button" >GO</button>
+                <h4 class="heading-2">Weather Details</h4>
+            </form>
+            <div  id="result">
+                
+            </div >
+        </div>
+      
+    </div>
+</body>
+<script>
+    async function search(){
+        let city = cityInput.value
+        if(city){
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=8ac5c4d57ba6a4b3dfcf622700447b1e`)
+            response.json().then((data)=>{
+                console.log(data);
+                display(data)
+                displayTemp(data)
+            })
+        }
+        else{
+            alert('Please Enter The City Name')
+        }
+    }
+
+    function display(details){
+        htmlData=`
+        <div class="wdetails">
+                    
+                    <ul class="list">
+                        <li><span>Cloudy</span>&nbsp&nbsp&nbsp  ${details.clouds.all} </li>
+                        <li><span>Humidity</span> &nbsp&nbsp&nbsp   ${details.main.humidity} % </li>
+                        <li><span>Wind Speed</span> &nbsp&nbsp&nbsp ${details['wind'].speed} km/hr </li>
+                        <li><span>Weather</span>  &nbsp&nbsp&nbsp   ${details.weather[0].main} </li>
+                        <li><span>Pressure</span>  &nbsp&nbsp&nbsp   ${details.main.pressure} hPa </li>
+                    </ul>
+         </div>
+        `
+        result.innerHTML = htmlData
+    }
+    function displayTemp(temp){
+        htmlData=`
+        <h1 class="temp">
+                ${Math.floor(temp.main['temp']-273.15).toFixed(1)}<span id="degree">&#8451</span>
+            </h1>
+        <h5 class="place">${temp.name}</h5>
+        <h4 class="long">(${temp['coord'].lon}&nbsp&#176, ${temp['coord'].lat}&nbsp&#176)</h5>
+        `
+        result1.innerHTML = htmlData
+    }
+</script>
+</html>
